@@ -1,7 +1,8 @@
+import axios from "axios"
 class Board{
-
     constructor(){
         this.board = []
+        this.dictionary = []
         for(let i=0;i<15;i++){
             let row = []
             for(let j=0;j<15;j++){
@@ -10,10 +11,25 @@ class Board{
             this.board.push(row)
         }
     }
-    loadDictionary(){
-        //load the json dictionary
+    loadDictionary() {
+        let context = this
+        return new Promise(function(myResolve, myReject) {
+            //load the json dictionary 
+            //why load online data? because it's easier to add new word to the json file online remotely than to access the local files add word there
+            //also, the path could be easily replaced by some other dictionary api path instead of manually downloading a new dictionary and using fs
+            let path = "https://raw.githubusercontent.com/dwyl/english-words/master/words_dictionary.json"
+            axios.get(path)
+            .then(json => {
+                context.dictionary = Object.keys(json.data)
+                myResolve()
+            })
+            .catch(e=>{
+                console.error(e)
+                myReject("Failed to Load Dictionary")
+            })
+        })
     }
-    place(posLetters) {
+    place(posLetters) { //format of posLetters: [row, col, letter]
         let temp = JSON.parse(JSON.stringify(this.board))
         let score = 0;
         posLetters.forEach(set=>{
@@ -27,6 +43,7 @@ class Board{
         if(score===-1)
             return false
         //check the points row & column
+
 
     }
     show(){

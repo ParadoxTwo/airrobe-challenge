@@ -8,13 +8,7 @@ const rl = createInterface({
 });
 
 let board = new Board()
-let bag = new Bag()
-let racks = {
-    capacity: 7,
-    players: [[],[]],
-}
-
-bag.show()
+board.loadDictionary()
 
 // rl.question("What is your name ? ", function(name) {
 //     rl.question("Where do you live ? ", function(country) {

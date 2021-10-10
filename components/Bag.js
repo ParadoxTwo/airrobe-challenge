@@ -7,7 +7,7 @@ class Bag {
     }
     generateAlphabet(){
         this.alphabet = []
-        for(let i=65; i<=91;i++){
+        for(let i=65; i<91;i++){
             let letter = String.fromCharCode(i)
             this.alphabet.push(letter)
         }
@@ -34,20 +34,41 @@ class Bag {
           // Pick a remaining element…
           i = Math.floor(Math.random() * l--);
           // And swap it with the current element.
-          t = array[l];
-          array[l] = array[i];
-          array[i] = t;
+          t = this.tiles[l];
+          this.tiles[l] = this.tiles[i];
+          this.tiles[i] = t;
         }
+    }
+    replaceTiles(racks, player, indices){
+        let returnValue = true
+        indices.forEach(index=>{ //if the given indices don't exist, return false
+            if(racks.players[player][index] === undefined)
+                returnValue = false
+        })
+        if(!returnValue) return returnValue
+        //push letters of the indices from racks.player[player] into the tiles
+        //shuffle
+        //pop from tiles for each index in indices and replace it in the player stack
+        indices.forEach(index => {
+            this.tiles.push(racks.players[player][index])
+        });
+        this.shuffle()
+        indices.forEach(index=>{
+            racks.players[player][index] = this.tiles.pop()
+        })
+        return true
+
     }
     replenish(racks, player){
         let i=racks.players[player].length
-        if(i===racks.capacity) return false
-
+        let returnValue = false
+        if(i===racks.capacity) return returnValue
         for(;i<racks.capacity;i++){
             if(this.tiles.length>0){
                 racks.players[player].push(this.tiles.pop())
+                returnValue = true
             }
-            else return false
+            else return returnValue
         }
         return true
     }

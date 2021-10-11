@@ -47,7 +47,18 @@ class Board{
     }
     place(posLetters) { //format of posLetters: [[row, col, letter]...]
         let tempBoard = JSON.parse(JSON.stringify(this.board)), context = this
-        let score = 0, center = false, initRow = posLetters[0][0], initCol = posLetters[0][1], rowWise = true, colWise = true;
+        let score = 0, center = false, initRow = posLetters[0][0], initCol = posLetters[0][1], rowWise = true, colWise = true, invalid = false, outOfBounds = false, overlap = false
+        posLetters.forEach(set=>{
+            let row = set[0], col = set[1], letter = set[2]
+            if(!this.alphabet.includes(letter))
+                invalid = true
+            if(row<0||row>14||col<0||col>14)
+                outOfBounds = true
+        })
+        if(invalid)
+            return [0, false, "Invalid letter."]
+        if(outOfBounds)
+            return [0, false, "Position of one of the tiles is out of bounds (outside the range [0-14])"]
         posLetters.forEach(set=>{
             let row = set[0], col = set[1]
             let letter = set[2]
@@ -63,11 +74,12 @@ class Board{
             if(tempBoard[row][col] ==='_')
                 tempBoard[row][col] = letter
             else 
-                score = -1
+                overlap = true
         })
+        
         if(!(rowWise||colWise))
-            return [0, false, "Must place the tiles in either same row or same column."]
-        if(score===-1)
+            return [0, false, "Must place all the tiles in either same row or same column."]
+        if(overlap)
             return [0, false, "Cannot replace tile on the board."]
         if(!center)
             if(this.first)
@@ -76,7 +88,7 @@ class Board{
         let wordlist = [], horizontalCheck = true, verticalCheck = true
         if(colWise){
             let row = initRow, col = initCol
-            let colIterator, currentLetter, currentWord
+            let rowIterator, currentLetter, currentWord
             //check if it's connected to the main branch
             if(!this.first){
                 let connected = this.alphabet.includes(tempBoard[row-1][col]) //starting from above 1st element
@@ -99,22 +111,22 @@ class Board{
             }
             //upward to letter (reverse)
             let upward = ""
-            colIterator = 1
-            currentLetter = tempBoard[row][col-colIterator]
+            rowIterator = 1
+            currentLetter = tempBoard[row-rowIterator][col]
             while(this.alphabet.includes(currentLetter)){
                 upward = currentLetter + upward
-                colIterator++
-                currentLetter = tempBoard[row][col-colIterator]
+                rowIterator++
+                currentLetter = tempBoard[row-rowIterator][col]
             }
 
             //downward to letter
             let downward = ""
-            colIterator = 1
-            currentLetter = tempBoard[row][col+colIterator]
+            rowIterator = 1
+            currentLetter = tempBoard[row+rowIterator][col]
             while(this.alphabet.includes(currentLetter)){
                 downward = downward + currentLetter
-                colIterator++
-                currentLetter = tempBoard[row][col+colIterator]
+                rowIterator++
+                currentLetter = tempBoard[row+rowIterator][col]
             }
 
             //combine up & down -> word
@@ -123,41 +135,43 @@ class Board{
                 wordlist.push(currentWord)
             else
                 verticalCheck = false
-            //check horizontally - letterwise
             
+            //check horizontally - letterwise
             posLetters.forEach(set=>{
                 row = set[0]
                 col = set[1]
-                let rowIterator
+                let colIterator
                 //leftward to letter (reverse)
                 let leftward = ""
-                rowIterator = 1
-                currentLetter = tempBoard[row-rowIterator][col]
+                colIterator = 1
+                currentLetter = tempBoard[row][col-colIterator]
                 while(this.alphabet.includes(currentLetter)){
                     leftward = currentLetter+leftward
-                    rowIterator++
-                    currentLetter = tempBoard[row-rowIterator][col]
+                    colIterator++
+                    currentLetter = tempBoard[row][col-colIterator]
                 }
                 //rightward to letter
                 let rightward = ""
-                rowIterator = 1
-                currentLetter = tempBoard[row+rowIterator][col]
+                colIterator = 1
+                currentLetter = tempBoard[row][col+colIterator]
                 while(this.alphabet.includes(currentLetter)){
                     rightward = rightward + currentLetter
-                    rowIterator++
-                    currentLetter = tempBoard[row+rowIterator][col]
+                    colIterator++
+                    currentLetter = tempBoard[row][col+colIterator]
                 }
                 //combine left & right -> word
-                currentWord = leftward + tempBoard[row][col] + rightward
-                if(this.dictionary.includes(currentWord))
-                    wordlist.push(currentWord)
-                else 
-                    horizontalCheck = false
+                if(leftward+rightward!==""){ //nothing to consider if there are no letters either to left or to right
+                    currentWord = leftward + tempBoard[row][col] + rightward
+                    if(this.dictionary.includes(currentWord))
+                        wordlist.push(currentWord)
+                    else 
+                        horizontalCheck = false
+                }
             })
         }
         if(rowWise){
             let row = initRow, col = initCol
-            let rowIterator, currentLetter, currentWord
+            let colIterator, currentLetter, currentWord
             //check if it's connected to the main branch
             if(!this.first){
                 let connected = this.alphabet.includes(tempBoard[row][col-1]) //starting from left of 1st element
@@ -180,22 +194,22 @@ class Board{
             }
             //leftward to letter (reverse)
             let leftward = ""
-            rowIterator = 1
-            currentLetter = tempBoard[row-rowIterator][col]
+            colIterator = 1
+            currentLetter = tempBoard[row][col-colIterator]
             while(this.alphabet.includes(currentLetter)){
                 leftward = currentLetter+leftward
-                rowIterator++
-                currentLetter = tempBoard[row-rowIterator][col]
+                colIterator++
+                currentLetter = tempBoard[row][col-colIterator]
             }
 
             //rightward to letter
             let rightward = ""
-            rowIterator = 1
-            currentLetter = tempBoard[row+rowIterator][col]
+            colIterator = 1
+            currentLetter = tempBoard[row][col+colIterator]
             while(this.alphabet.includes(currentLetter)){
                 rightward = rightward + currentLetter
-                rowIterator++
-                currentLetter = tempBoard[row+rowIterator][col]
+                colIterator++
+                currentLetter = tempBoard[row][col+colIterator]
             }
 
             //combine left & right -> word
@@ -209,30 +223,32 @@ class Board{
             posLetters.forEach(set=>{
                 row = set[0]
                 col = set[1]
-                let colIterator = 1
+                let rowIterator = 1
                 //upward to letter (reverse)
                 let upward = ""
-                currentLetter = tempBoard[row][col-colIterator]
+                currentLetter = tempBoard[row-rowIterator][col]
                 while(this.alphabet.includes(currentLetter)){
                     upward = currentLetter + upward
-                    colIterator++
-                    currentLetter = tempBoard[row][col-colIterator]
+                    rowIterator++
+                    currentLetter = tempBoard[row-rowIterator][col]
                 }
                 //downward to letter
                 let downward = ""
-                colIterator = 1
-                currentLetter = tempBoard[row][col+colIterator]
+                rowIterator = 1
+                currentLetter = tempBoard[row+rowIterator][col]
                 while(this.alphabet.includes(currentLetter)){
                     downward = downward + currentLetter
-                    colIterator++
-                    currentLetter = tempBoard[row][col+colIterator]
+                    rowIterator++
+                    currentLetter = tempBoard[row+rowIterator][col]
                 }
                 //combine up & down -> word
-                currentWord = upward + tempBoard[row][col] + downward
-                if(this.dictionary.includes(currentWord))
-                    wordlist.push(currentWord)
-                else
-                    verticalCheck = false
+                if(upward+downward!==""){ //nothing to consider if there are no letters either above or below
+                    currentWord = upward + tempBoard[row][col] + downward
+                    if(this.dictionary.includes(currentWord))
+                        wordlist.push(currentWord)
+                    else
+                        verticalCheck = false
+                }
             })
         }
         if(!verticalCheck)
@@ -246,7 +262,7 @@ class Board{
         }
         this.board = tempBoard
         this.first = false
-        return [score, true, "Tiles successfully placed and formed words."]
+        return [score, true, "Tiles successfully placed and formed words.", wordlist]
     }
     show(){
         //add pointers for row and column as well

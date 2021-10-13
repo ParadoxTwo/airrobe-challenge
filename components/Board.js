@@ -1,5 +1,8 @@
 import axios from "axios"
+import fs from "fs"
+
 class Board{
+    //initializes the board setting all initial values
     constructor(){
         this.board = []
         this.first = true
@@ -13,23 +16,37 @@ class Board{
             this.board.push(row)
         }
         let context = this
+        //function to load the dictionary used by the game. It is expected to be in json object format. { "word1": 1, "word2": 1, ...}
         this.loadDictionary = ()=>{
             return new Promise(function(myResolve, myReject) {
                 //load the json dictionary 
                 //why load online data? because it's easier to add new word to the json file online remotely than to access the local files add word there
                 //also, the path could be easily replaced by some other dictionary api path instead of manually downloading a new dictionary and using fs
                 let path = "https://raw.githubusercontent.com/dwyl/english-words/master/words_dictionary.json"
+                process.stdout.write("\n.")
                 axios.get(path)
                 .then(json => {
                     let dictionary = Object.keys(json.data)
                     dictionary.forEach((word)=>{
                         context.dictionary.push(word.toUpperCase())
                     })
-                    myResolve(context.dictionary)
+                    myResolve(true)
                 })
                 .catch(e=>{
-                    console.error(e)
-                    myReject("Failed to Load Dictionary")
+                    console.log('Failed to load dictionary from the internet. Loading locally...')
+                    fs.readFile('./data/words_dictionary.json', 'utf8', (err, json) => {
+                        if (err) {
+                            console.log(`Error reading file from disk: ${err}`);
+                            myReject(false)
+                        } else {
+                            // parse JSON string to JSON object and store keys (words) in dictionary
+                            let dictionary = Object.keys(JSON.parse(json))
+                            dictionary.forEach((word)=>{
+                                context.dictionary.push(word.toUpperCase())
+                            })
+                            myResolve(true)
+                        }
+                    });
                 })
             })
         }

@@ -1,5 +1,5 @@
 import Board from "../components/Board.js"
-//imports to allow testing of Promises
+//imports/installs to allow testing of Promises (asynchronous functions)
 import "core-js/stable";
 import "regenerator-runtime/runtime";
 

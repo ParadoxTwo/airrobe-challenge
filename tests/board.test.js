@@ -2,6 +2,7 @@ import Board from "../components/Board.js"
 //imports/installs to allow testing of Promises (asynchronous functions)
 import "core-js/stable";
 import "regenerator-runtime/runtime";
+import { async } from "regenerator-runtime";
 
 describe('Initialization Tests for Board',()=>{
     it('Should Initialize', () => {
@@ -12,7 +13,6 @@ describe('Initialization Tests for Board',()=>{
         expect(board.dictionary.length).toBe(0)
         expect(board.alphabet.length).toBe(26)
         expect(board.loadDictionary).toBeTruthy()
-        //more expects for default values
     })
 })
 describe('Functional & Integration Tests for Board With Loaded Dictionary', ()=>{
@@ -43,7 +43,7 @@ describe('Functional & Integration Tests for Board With Loaded Dictionary', ()=>
         let posLetters = [[7, 7, 'A'], [7, 8, 'T']]
         let result = board.place(posLetters)
         expect(result[1]).toBe(true)
-        expect(result[2]).toBe("Tiles successfully placed and formed words.")
+        expect(result[2]).toBe("Tiles successfully placed and formed word(s).")
     })
     it('First Word Should Pass Through Center', ()=>{
         let posLetters = [[7, 9, 'A'], [7, 8, 'T']]
@@ -59,7 +59,7 @@ describe('Functional & Integration Tests for Board With Loaded Dictionary', ()=>
         posLetters = [[8, 8, 'I'], [9, 8, 'E']]
         result = board.place(posLetters)
         expect(result[1]).toBe(true)
-        expect(result[2]).toBe("Tiles successfully placed and formed words.")
+        expect(result[2]).toBe("Tiles successfully placed and formed word(s).")
     })
     it('Should Not Place Tiles Seperated From Main Branch', ()=>{
         let posLetters = [[7, 7, 'A'], [7, 8, 'T']]
@@ -105,5 +105,11 @@ describe('Functional & Integration Tests for Board With Loaded Dictionary', ()=>
         let posLetters = [[5, 7, 'G'], [6, 7, 'O'], [8, 7, 'O'],[7, 7, 'L'],[9, 7, 'S']]
         let result = board.place(posLetters)
         expect(result[1]).toBe(false)
+    })
+    it('Should Not Accept Broken Words (Ex: CAT  S',()=>{
+        let posLetters = [[5, 7, 'C'], [6, 7, 'A'], [7, 7, 'T'],[9, 7, 'S']]
+        let result = board.place(posLetters)
+        expect(result[1]).toBe(false)
+        expect(result[2]).toBe("Broken word.")
     })
 })

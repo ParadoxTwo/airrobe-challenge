@@ -6,7 +6,7 @@ class Game {
     constructor(){
         //a simple structure to store tiles for each player with capacity of 7
         this.loaded = false
-        this.scores = [0, 0] //scores for each player (test)
+        this.scores = [0, 0] //scores for each player
         this.racks = {
             capacity: 7,
             players: [[],[]], //2 players, 2 player racks
@@ -17,6 +17,11 @@ class Game {
         this.bag.replenish(this.racks, 1)
         this.prompt = PromptSync({sigint: true})
         let context = this
+        /*
+        Loads the dictionary for the game while generating a simple loading animation
+        Parameters: void
+        Returns: boolean, true if the dictionary successfully loads and false otherwise
+        */
         this.load = async ()=>{
             process.stdout.write("\nLoading the game.")
             let loaderAnimation = setInterval(()=>{
@@ -24,11 +29,27 @@ class Game {
             }, 1000)
             context.loaded = await context.board.loadDictionary()
             clearInterval(loaderAnimation)
-            if(context.loaded)
+            if(context.loaded){
                 console.log("\nLoading complete!")
-            else
+                return true
+            }
+            else{
                 console.log("\nLoading failed.")
+                return false
+            }
         }
+    }
+    //resets the game (more efficient than creating a new game)
+    reset(){
+        this.scores = [0, 0] //scores for each player
+        this.racks = {
+            capacity: 7,
+            players: [[],[]], //2 players, 2 player racks
+        }
+        this.board.reset()
+        this.bag.generateTiles()
+        this.bag.replenish(this.racks, 0)
+        this.bag.replenish(this.racks, 1)
     }
     //method to remove and return tiles of given indices from the rack of given players
     removeTilesFromRack(player = 0, indices = []){
@@ -44,6 +65,7 @@ class Game {
         return removed
     }
     /*
+    for reference
     testParams = { //could be set & changed however.
         optIter: 0, //for iterating through options of multiple turns
         option: [],
@@ -51,16 +73,15 @@ class Game {
         placeNumberOfTiles: [],
         currentTileIndex: 0, //kinda similar to j but can be different. for iterating through tile indices that need to be placed on board
         tileIndices: [],
-        letterPosIter: 0, //for iterating through placePos
+        letterPosIter: 0, //for iterating through letterPos
         letterPos: [],
         replaceIter: 0, // for iterating through replaceNumberOfTiles
         replaceNumberOfTiles: [],
         rTileIndex: 0, //for iterating through tile indices that need to be replaced
         rTileIndices: [],
-
-
     }
     */
+    //starts the game. test and testParams must only be used during testing.
     start(test=false, testParams){
         console.log("This is a turn based game between 2 players.\nIf both players pass, the game will end.\n")
         this.board.show()
@@ -137,20 +158,22 @@ class Game {
                                         
                                     }
                                     catch(e){
-                                        console.log(e) //remove 
                                         console.log("Incorrect format of placement.")
                                     }
                                 }
                             })
-                            //test
-                            console.log(positionTiles)
                             let result = this.board.place(positionTiles)
                             if(result[1]){
                                 this.scores[i]+=result[0]
+                                console.log(result[2])
+                                console.log(result[3])
                                 this.bag.replenish(this.racks,i)
                                 console.log("Your score is now: "+this.scores[i])
                             }
                             else{
+                                positionTiles.forEach(posTile=>{
+                                    this.racks.players[i].push(posTile[2]) // putting the tile back into the player's rack
+                                })
                                 console.log(result[2])
                                 option = 0
                                 continue
@@ -165,15 +188,16 @@ class Game {
                             console.log("How many tiles would you like to replace? [1-7]")
                             let numberOfTiles
                             if(test)
-                                numberOfTiles = testParams.replaceNumberOfTiles[replaceIter++] 
-                            numberOfTiles = Number(this.prompt())
+                                numberOfTiles = testParams.replaceNumberOfTiles[testParams.replaceIter++] 
+                            else
+                                numberOfTiles = Number(this.prompt())
                             let indices = [], j
                             for(j=0; j<numberOfTiles; ){
                                 console.log(this.racks.players[i])
                                 console.log(`Enter the index of the tile ${j+1} from your rack [0-${this.racks.players[i].length-1}]`)
                                 let index
                                 if(test)
-                                    index = testParams.rTileIndices[rTileIndex]
+                                    index = testParams.rTileIndices[testParams.rTileIndex++]
                                 else
                                     index = Number(this.prompt())
                                 if(index<0||index>this.racks.players[i].length-1){
@@ -209,6 +233,7 @@ class Game {
                 }
             }
         }
+        console.log("GAME OVER!!")
         if(this.scores[0]>this.scores[1]){
             console.log(`Player 1 wins with a score of ${this.scores[0]}!`)
         }

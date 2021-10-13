@@ -16,7 +16,11 @@ class Board{
             this.board.push(row)
         }
         let context = this
-        //function to load the dictionary used by the game. It is expected to be in json object format. { "word1": 1, "word2": 1, ...}
+        /*
+        Function to load the dictionary used by the game. It is expected to be in json object format. { "word1": 1, "word2": 1, ...}
+        Parameters: void
+        Returns: Promise, boolean when fulfilled; true when successfully loaded the game dictionary, false otherwise
+        */
         this.loadDictionary = ()=>{
             return new Promise(function(myResolve, myReject) {
                 //load the json dictionary 
@@ -36,7 +40,7 @@ class Board{
                     console.log('Failed to load dictionary from the internet. Loading locally...')
                     fs.readFile('./data/words_dictionary.json', 'utf8', (err, json) => {
                         if (err) {
-                            console.log(`Error reading file from disk: ${err}`);
+                            console.log(`Error reading file: ${err}`);
                             myReject(false)
                         } else {
                             // parse JSON string to JSON object and store keys (words) in dictionary
@@ -51,6 +55,11 @@ class Board{
             })
         }
     }
+    /*
+    Resets the board efficiently
+    Parameters: void
+    Returns: void
+    */
     reset(){
         this.board = []
         this.first = true
@@ -62,6 +71,16 @@ class Board{
             this.board.push(row)
         }
     }
+    /*
+    Places tiles into the board in the specified location
+    Parameters: 
+        posLetters - A structure comprised of 2D array which stores the desired location (row & column) and the letter to be placed on the board
+    Returns: Array holding upto 4 values - 
+            number - represents the increase of score due to formation of word(s)
+            boolean - true if placement of all tiles succeeds and false otherwise
+            string - a message corresponding to success or failure of word formation
+            array - a list of words which were successfully
+    */
     place(posLetters) { //format of posLetters: [[row, col, letter]...]
         let tempBoard = JSON.parse(JSON.stringify(this.board)), context = this
         let score = 0, center = false, initRow = posLetters[0][0], initCol = posLetters[0][1], rowWise = true, colWise = true, invalid = false, outOfBounds = false, overlap = false
@@ -301,10 +320,13 @@ class Board{
                 }
             })
         }
+        //validating final checks
         if(!verticalCheck)
             return [0, false, "One of the columns doesn't form a word."]
         if(!horizontalCheck)
             return [0, false, "One of the rows doesn't form a word."]
+
+        //scoring
         if(horizontalCheck&&verticalCheck){
             wordlist.forEach(word=>{
                 score+=word.length
@@ -312,10 +334,14 @@ class Board{
         }
         this.board = tempBoard
         this.first = false
-        return [score, true, "Tiles successfully placed and formed words.", wordlist]
+        return [score, true, "Tiles successfully placed and formed word(s).", wordlist]
     }
+    /*
+    Prints the board in a console level appealing manner for ease of positioning
+    Parameters: void
+    Returns: void
+    */
     show(){
-        //add pointers for row and column as well
         console.log("    __ __ __ __start of board_ __ __ __ __ __ __ ")
         console.log("    0  1  2  3  4  5  6  7  8  9  10 11 12 13 14 ")
         console.log("    __ __ __ __ __ __ __ __ __ __ __ __ __ __ __ ")

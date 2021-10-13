@@ -88,7 +88,6 @@ class Game {
                 console.log(this.racks.players[i])
                 let option = 0
                 while(option<1||option>3){
-                    console.log(testParams.optIter)
                     console.log(`What action would you like to take?\n1. Place Tiles\n2. Replace Tiles From Bag\n3. Pass`)
                     if(test)
                         option = testParams.option[testParams.optIter++]
@@ -107,7 +106,6 @@ class Game {
                             console.log(`Enter the indices of the tiles you want to place from your rack [1-${this.racks.players[i].length}] (example: 1, 5, 2, 7)`)
                             let indices //index = testParams.rTileIndices[testParams.rTileIndex++]
                             try{
-                                console.log('['+testParams.tileIndices+']')
                                 if(test)
                                     indices = JSON.parse('['+testParams.tileIndices[testParams.currentTileIndex++]+']')
                                 else
@@ -209,7 +207,6 @@ class Game {
                                 continue
                             }
                             let unique = true, inRange = true
-                            console.log(indices)
                             for(let j=0;j<indices.length;j++){
                                 for(let k=0;k<indices.length;k++){
                                     if(!j===k)

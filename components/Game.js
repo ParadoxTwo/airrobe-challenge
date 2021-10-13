@@ -85,9 +85,9 @@ class Game {
         while(pass<2){
             for(let i=0;i<2&&pass<2;i++){ //one turn each
                 console.log(`Player ${i+1}'s Turn\nYour rack:`)
-                console.log(this.racks.players[i])
                 let option = 0
                 while(option<1||option>3){
+                    console.log(this.racks.players[i])
                     console.log(`What action would you like to take?\n1. Place Tiles\n2. Replace Tiles From Bag\n3. Pass`)
                     if(test)
                         option = testParams.option[testParams.optIter++]
@@ -227,8 +227,7 @@ class Game {
                                 console.log(`One of the indices is out of range [1-${this.racks.players[i].length}].`)
                                 continue
                             }
-                            console.log('These tiles will be replaced randomly from the bag:')
-                            console.log(indices)
+                            console.log('The selected tiles will be replaced randomly from the bag.')
                             if(this.bag.replaceTiles(this.racks, i, indices)){
                                 console.log("Successfully replaced the tiles")
                                 console.log(this.racks.players[i])

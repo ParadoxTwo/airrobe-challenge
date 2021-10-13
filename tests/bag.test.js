@@ -21,7 +21,7 @@ describe('Functional & Integration Tests for Bag', () => {
     })
     it('Should Initialize', () => {
         expect(bag.number).toBe(100)
-        expect(bag.alphabet).toBeTruthy()
+        expect(bag.alphabet.length).toBe(26)
         expect(bag.tiles).toBeTruthy()
     });
 

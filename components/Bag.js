@@ -2,20 +2,11 @@ class Bag {
 
     constructor(){
         this.number = 100
-        this.generateAlphabet()
-        this.generateTiles()
-    }
-    /*
-    Generates a set of uppercase alphabet
-    Parameters: void
-    Return: void
-    */
-    generateAlphabet(){
         this.alphabet = []
-        for(let i=65; i<91;i++){
-            let letter = String.fromCharCode(i)
-            this.alphabet.push(letter)
-        }
+        //Using official number of tiles of each kind except for E & I which are one more each instead of 2 jokers
+        this.alphabetCounts = {'A': 9, 'B': 2, 'C': 2, 'D': 4, 'E': 13, 'F': 2, 'G': 3, 'H': 2, 'I': 10, 'J': 1, 'K':1, 'L':4, 'M':2, 'N':6, 'O':8, 'P':2, 'Q':1, 'R':6, 'S':4, 'T':6, 'U':4, 'V':2, 'W':2, 'X':1, 'Y':2, 'Z':1}
+        this.generateTiles()
+        this.shuffle()
     }
     /*
     Randomly generates tiles for the bag
@@ -24,16 +15,11 @@ class Bag {
     */
     generateTiles(){
         this.tiles = []
-        let frequent = ['A', 'I', 'E', 'O', 'U']
-        for(let i=0;i<this.number;i++){
-            if(Math.random()<0.3){
-                let select = Math.round(Math.random()*4)
-                this.tiles.push(frequent[select])
-            }
-            else{
-                let select = Math.round(Math.random()*25)
-                this.tiles.push(this.alphabet[select])
-            }
+        let counts = this.alphabetCounts
+        for(let letter of Object.keys(counts)){
+            this.alphabet.push(letter)
+            for(let count=0;count<counts[letter];count++)
+                this.tiles.push(letter)
         }
     }
     /*Shuffles the bag of tiles

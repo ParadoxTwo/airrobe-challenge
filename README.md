@@ -31,6 +31,6 @@ Each player has a rack of 7 tiles each. First, Player 1 can either place tiles i
     <li>If option 1 (Place Tiles) is chosen, the player has to provide information about which tile he/she wants to place and where on the board. The location on the board is in row, column format ranging from 0 to 14 which is shown on the board to make it easier.</li>  
     <li>If option 2 (Replace Tiles From Bag) is chosen, the player has to tell which tiles he/she wants replaced and it will be done.</li>  
     <li>If option 3 (Pass) is chosen, the turn is passed to Player 2.  </li>
-<ul>  
+</ul>  
 This gameplay continues until both players decide to Pass in which case the game ends and scores are shown with the victor.
 

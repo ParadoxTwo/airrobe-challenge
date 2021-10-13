@@ -4,7 +4,7 @@ Building this game was quite challenging and fun! I learned a lot as I applied T
 
 ## Prerequisites
 
-Before running the game, make sure to install nodejs if you do not have it installed already and the run the command in the project directory:
+Before running the game, make sure to install nodejs if you do not have it installed already and then run the command in the project directory:
 
 ### `npm install`
 

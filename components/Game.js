@@ -196,12 +196,12 @@ class Game {
                             let indices = [], j
                             for(j=0; j<numberOfTiles; ){
                                 console.log(this.racks.players[i])
-                                console.log(`Enter the index of the tile ${j+1} from your rack [0-${this.racks.players[i].length-1}]`)
+                                console.log(`Enter the index of the tile ${j+1} from your rack [1-${this.racks.players[i].length}]`)
                                 let index
                                 if(test)
                                     index = testParams.rTileIndices[testParams.rTileIndex++]
                                 else
-                                    index = Number(this.prompt())
+                                    index = Number(this.prompt())-1 // subtracted 1 as index actually starts from 0
                                 if(indices.includes(index)){
                                     console.log("You already selected this tile.")
                                     continue

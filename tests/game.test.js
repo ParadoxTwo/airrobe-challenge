@@ -49,14 +49,10 @@ describe('Integration and System Test for Game', ()=>{
         let testParams = { //all iterators here increment automatically.. preset in the Game class
             optIter: 0, //for iterating through options of multiple turns
             option: [3, 3],  //pass once and pass again
-            tileNumIter: 0,  //for iterating through placeNumberOfTiles of multiple turns    
-            placeNumberOfTiles: [],
             currentTileIndex: 0, //kinda similar to j but can be different. for iterating through tile indices that need to be placed on board
             tileIndices: [],
             letterPosIter: 0, //for iterating through placePos
             letterPos: [],
-            replaceIter: 0, // for iterating through replaceNumberOfTiles
-            replaceNumberOfTiles: [],
             rTileIndex: 0, //for iterating through tile indices that need to be replaced
             rTileIndices: []
         }
@@ -84,14 +80,10 @@ describe('Integration and System Test for Game', ()=>{
         let testParams = { //all iterators here increment automatically.. preset in the Game class
             optIter: 0, //for iterating through options of multiple turns
             option: [1, 3, 3],  //player1 place tiles, player2 passes and then player1 passes
-            tileNumIter: 0,  //for iterating through placeNumberOfTiles of multiple turns    
-            placeNumberOfTiles: [1], //just placing one tile
             currentTileIndex: 0, //kinda similar to j but can be different. for iterating through tile indices that need to be placed on board
-            tileIndices: [1],    //placing 1st tile from rack as all letters individually are in the word dictionary
+            tileIndices: ['1'],    //placing 1st tile from rack as all letters individually are in the word dictionary
             letterPosIter: 0, //for iterating through letterPos
             letterPos: ['7,7'], //placing at the center of the game board according to ruls
-            replaceIter: 0, // for iterating through replaceNumberOfTiles
-            replaceNumberOfTiles: [],
             rTileIndex: 0, //for iterating through tile indices that need to be replaced
             rTileIndices: []
         }
@@ -104,16 +96,12 @@ describe('Integration and System Test for Game', ()=>{
         let testParams = { //all iterators here increment automatically.. preset in the Game class
             optIter: 0, //for iterating through options of multiple turns
             option: [2, 1, 3, 3],  // same sequence as test tile
-            tileNumIter: 0,  //for iterating through placeNumberOfTiles of multiple turns    
-            placeNumberOfTiles: [1], //just placing one tile
             currentTileIndex: 0, //kinda similar to j but can be different. for iterating through tile indices that need to be placed on board
-            tileIndices: [1],    //placing 1st tile from rack as all letters individually are in the word dictionary
+            tileIndices: ['1'],    //placing 1st tile from rack as all letters individually are in the word dictionary
             letterPosIter: 0, //for iterating through letterPos
             letterPos: ['7,7'], //placing at the center of the game board according to ruls
-            replaceIter: 0, // for iterating through replaceNumberOfTiles
-            replaceNumberOfTiles: [2], //replacing 2 tiles
             rTileIndex: 0, //for iterating through tile indices that need to be replaced
-            rTileIndices: [0,4] //tiles of index 0 & 4 will be replaced
+            rTileIndices: ['1,4'] //tiles of index 1 & 4 will be replaced
         }
         game.start(true, testParams)
         expect(game.scores[0]).toBe(0);
@@ -123,15 +111,11 @@ describe('Integration and System Test for Game', ()=>{
         game.reset()
         let testParams = { //all iterators here increment automatically.. preset in the Game class
             optIter: 0, //for iterating through options of multiple turns
-            option: [1, 1, 3, 3],  // player 1 places incorrectly, player 1 places correctly and then both pass
-            tileNumIter: 0,  //for iterating through placeNumberOfTiles of multiple turns    
-            placeNumberOfTiles: [1, 1], //placing 1 tile each time
+            option: [1, 3, 3],  // player 1 places incorrectly & correctly and then both pass
             currentTileIndex: 0, //kinda similar to j but can be different. for iterating through tile indices that need to be placed on board
-            tileIndices: [1, 1],    //placing 1st tile from rack each time (Note: if number of tiles was 2, 1 , then this wwould have been [1,1,  1])
+            tileIndices: ['1', '1'],    //placing 1st tile from rack each time (Note: if number of tiles was 2, 1 , then this wwould have been ['1,1' ,  '1'])
             letterPosIter: 0, //for iterating through letterPos
             letterPos: ['7,6', '7,7'], //1st wrong placement and then correct placement
-            replaceIter: 0, // for iterating through replaceNumberOfTiles
-            replaceNumberOfTiles: [0], //replacing 0 tiles
             rTileIndex: 0, //for iterating through tile indices that need to be replaced
             rTileIndices: [] //no tiles will be replaced
         }
@@ -143,15 +127,11 @@ describe('Integration and System Test for Game', ()=>{
         game.reset()
         let testParams = { //all iterators here increment automatically.. preset in the Game class
             optIter: 0, //for iterating through options of multiple turns
-            option: [3, 1, 1, 3, 3],  // player1 passes, player 2 places incorrectly, player 2 places correctly and then both pass
-            tileNumIter: 0,  //for iterating through placeNumberOfTiles of multiple turns    
-            placeNumberOfTiles: [1, 1], //placing 1 tile each time
+            option: [3, 1, 3, 3],  // player1 passes, player 2 places incorrectly & correctly and then both pass
             currentTileIndex: 0, //kinda similar to j but can be different. for iterating through tile indices that need to be placed on board
-            tileIndices: [1, 1],    //placing 1st tile from rack each time (Note: if number of tiles was 2, 1 , then this wwould have been [1,1,  1])
+            tileIndices: ['1', '1'],    //placing 1st tile from rack each time (Note: if number of tiles was 2, 1 , then this wwould have been ['1,1' ,  '1'])
             letterPosIter: 0, //for iterating through letterPos
             letterPos: ['7,6', '7,7'], //1st wrong placement and then correct placement
-            replaceIter: 0, // for iterating through replaceNumberOfTiles
-            replaceNumberOfTiles: [0], //replacing 0 tiles
             rTileIndex: 0, //for iterating through tile indices that need to be replaced
             rTileIndices: [] //no tiles will be replaced
         }

@@ -69,14 +69,10 @@ class Game {
     testParams = { //could be set & changed however.
         optIter: 0, //for iterating through options of multiple turns
         option: [],
-        tileNumIter: 0,  //for iterating through placeNumberOfTiles of multiple turns    
-        placeNumberOfTiles: [],
         currentTileIndex: 0, //kinda similar to j but can be different. for iterating through tile indices that need to be placed on board
         tileIndices: [],
         letterPosIter: 0, //for iterating through letterPos
         letterPos: [],
-        replaceIter: 0, // for iterating through replaceNumberOfTiles
-        replaceNumberOfTiles: [],
         rTileIndex: 0, //for iterating through tile indices that need to be replaced
         rTileIndices: [],
     }
@@ -92,6 +88,7 @@ class Game {
                 console.log(this.racks.players[i])
                 let option = 0
                 while(option<1||option>3){
+                    console.log(testParams.optIter)
                     console.log(`What action would you like to take?\n1. Place Tiles\n2. Replace Tiles From Bag\n3. Pass`)
                     if(test)
                         option = testParams.option[testParams.optIter++]
@@ -104,32 +101,42 @@ class Game {
                             console.log("You don't have anymore tiles. Please select another option.")
                             continue
                         }
-                        let numberOfTiles = 0
-                        while(numberOfTiles<1||numberOfTiles>this.racks.players[i].length){
-                            console.log(`How many tiles would you like to place? [1-${this.racks.players[i].length}]`)
-                            if(test)
-                                numberOfTiles = testParams.placeNumberOfTiles[testParams.tileNumIter++]
-                            else
-                                numberOfTiles = Number(this.prompt())
-                            if(numberOfTiles<1||numberOfTiles>this.racks.players[i].length){
-                                console.log("Please enter a number within the valid range.")
+                        let run = true
+                        while(run){
+                            console.log(this.racks.players[i])
+                            console.log(`Enter the indices of the tiles you want to place from your rack [1-${this.racks.players[i].length}] (example: 1, 5, 2, 7)`)
+                            let indices //index = testParams.rTileIndices[testParams.rTileIndex++]
+                            try{
+                                console.log('['+testParams.tileIndices+']')
+                                if(test)
+                                    indices = JSON.parse('['+testParams.tileIndices[testParams.currentTileIndex++]+']')
+                                else
+                                    indices = JSON.parse('['+this.prompt()+']')
+                            }
+                            catch(e){
+                                console.log("Incorrect format.")
                                 continue
                             }
-                            let indices = [], j
-                            for(j=0; j<numberOfTiles; ){
-                                console.log(this.racks.players[i])
-                                console.log(`Enter the index of the tile ${j+1} from your rack [0-${this.racks.players[i].length-1}]`)
-                                let index 
-                                if(test)   
-                                    index = testParams.tileIndices[testParams.currentTileIndex++]
-                                else
-                                    index = Number(this.prompt())
-                                if(index<0||index>this.racks.players[i].length-1){
-                                    console.log("Index entered is out of range.")
-                                    continue
+                            let unique = true, inRange = true
+                            for(let j=0;j<indices.length;j++){
+                                for(let k=0;k<indices.length;k++){
+                                    if(!j===k)
+                                        if(indices[j]===indices[k])
+                                            unique = false
                                 }
-                                j++
-                                indices.push(index)
+                                if(indices[j]<1||indices[j]>this.racks.players[i].length)
+                                    inRange = false
+                            }
+                            for(let j=0;j<indices.length;j++)
+                                indices[j]-- //subtracting 1 to make it computer readable index
+                            
+                            if(!unique){
+                                console.log("You have one or more repeating tiles. Please select again.")
+                                continue
+                            }
+                            if(!inRange){
+                                console.log(`One of the indices is out of range [1-${this.racks.players[i].length}].`)
+                                continue
                             }
                             let tiles = this.removeTilesFromRack(i, indices), positionTiles = []
                             this.board.show()
@@ -171,6 +178,7 @@ class Game {
                                 console.log("Your score is now: "+this.scores[i])
                                 console.log("Your rack has been replenished")
                                 console.log(this.racks.players[i])
+                                run = false
                             }
                             else{
                                 positionTiles.forEach(posTile=>{
@@ -185,33 +193,42 @@ class Game {
                     }
                     else if(option === 2 ){
                         pass = 0
-                        let numberOfTiles = 0
-                        while(numberOfTiles<=0||numberOfTiles>7){
-                            console.log("How many tiles would you like to replace? [1-7]")
-                            let numberOfTiles
-                            if(test)
-                                numberOfTiles = testParams.replaceNumberOfTiles[testParams.replaceIter++] 
-                            else
-                                numberOfTiles = Number(this.prompt())
-                            let indices = [], j
-                            for(j=0; j<numberOfTiles; ){
-                                console.log(this.racks.players[i])
-                                console.log(`Enter the index of the tile ${j+1} from your rack [1-${this.racks.players[i].length}]`)
-                                let index
+                        let run = true
+                        while(run){
+                            console.log(this.racks.players[i])
+                            console.log(`Enter the indices of the tiles you want to replace from your rack [1-${this.racks.players[i].length}] (example: 1, 5, 2, 7)`)
+                            let indices
+                            try{
                                 if(test)
-                                    index = testParams.rTileIndices[testParams.rTileIndex++]
+                                    indices = JSON.parse('['+testParams.rTileIndices[testParams.rTileIndex++]+']')
                                 else
-                                    index = Number(this.prompt())-1 // subtracted 1 as index actually starts from 0
-                                if(indices.includes(index)){
-                                    console.log("You already selected this tile.")
-                                    continue
+                                    indices = JSON.parse('['+this.prompt()+']')
+                            }
+                            catch(e){
+                                console.log("Incorrect format.")
+                                continue
+                            }
+                            let unique = true, inRange = true
+                            console.log(indices)
+                            for(let j=0;j<indices.length;j++){
+                                for(let k=0;k<indices.length;k++){
+                                    if(!j===k)
+                                        if(indices[j]===indices[k])
+                                            unique = false
                                 }
-                                if(index<0||index>this.racks.players[i].length-1){
-                                    console.log("Index entered is out of range.")
-                                    continue
-                                }
-                                j++
-                                indices.push(index)
+                                if(indices[j]<1||indices[j]>this.racks.players[i].length)
+                                    inRange = false
+                            }
+                            for(let j=0;j<indices.length;j++)
+                                indices[j]-- //subtracting 1 to make it computer readable index
+                            
+                            if(!unique){
+                                console.log("You have one or more repeating tiles. Please select again.")
+                                continue
+                            }
+                            if(!inRange){
+                                console.log(`One of the indices is out of range [1-${this.racks.players[i].length}].`)
+                                continue
                             }
                             console.log('These tiles will be replaced randomly from the bag:')
                             console.log(indices)
@@ -222,7 +239,6 @@ class Game {
                             }
                             else{
                                 console.log("Failed to replace the specified tiles.")
-                                numberOfTiles = 0
                             }
                         }
                     }

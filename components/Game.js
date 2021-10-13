@@ -43,7 +43,25 @@ class Game {
         this.racks.players[player] = newRack
         return removed
     }
-    start(){
+    /*
+    testParams = { //could be set & changed however.
+        optIter: 0, //for iterating through options of multiple turns
+        option: [],
+        tileNumIter: 0,  //for iterating through placeNumberOfTiles of multiple turns    
+        placeNumberOfTiles: [],
+        currentTileIndex: 0, //kinda similar to j but can be different. for iterating through tile indices that need to be placed on board
+        tileIndices: [],
+        letterPosIter: 0, //for iterating through placePos
+        letterPos: [],
+        replaceIter: 0, // for iterating through replaceNumberOfTiles
+        replaceNumberOfTiles: [],
+        rTileIndex: 0, //for iterating through tile indices that need to be replaced
+        rTileIndices: [],
+
+
+    }
+    */
+    start(test=false, testParams){
         console.log("This is a turn based game between 2 players.\nIf both players pass, the game will end.\n")
         this.board.show()
         let context = this, pass = 0
@@ -54,7 +72,10 @@ class Game {
                 let option = 0
                 while(option<1||option>3){
                     console.log(`What action would you like to take?\n1. Place Tiles\n2. Replace Tiles From Bag\n3. Pass`)
-                    option = Number(this.prompt())
+                    if(test)
+                        option = testParams.option[testParams.optIter++]
+                    else
+                        option = Number(this.prompt())
                     if(option === 1 ){
                         pass = 0
                         if(this.racks.players[i].length<1){
@@ -65,7 +86,10 @@ class Game {
                         let numberOfTiles = 0
                         while(numberOfTiles<1||numberOfTiles>this.racks.players[i].length){
                             console.log(`How many tiles would you like to place? [1-${this.racks.players[i].length}]`)
-                            numberOfTiles = Number(this.prompt())
+                            if(test)
+                                numberOfTiles = testParams.placeNumberOfTiles[testParams.tileNumIter++]
+                            else
+                                numberOfTiles = Number(this.prompt())
                             if(numberOfTiles<1||numberOfTiles>this.racks.players[i].length){
                                 console.log("Please enter a number within the valid range.")
                                 continue
@@ -74,8 +98,11 @@ class Game {
                             for(j=0; j<numberOfTiles; ){
                                 console.log(this.racks.players[i])
                                 console.log(`Enter the index of the tile ${j+1} from your rack [0-${this.racks.players[i].length-1}]`)
-                                let index = this.prompt()
-                                index = Number(index)
+                                let index 
+                                if(test)   
+                                    index = testParams.tileIndices[testParams.currentTileIndex++]
+                                else
+                                    index = Number(this.prompt())
                                 if(index<0||index>this.racks.players[i].length-1){
                                     console.log("Index entered is out of range.")
                                     continue
@@ -90,7 +117,11 @@ class Game {
                                 while(run){
                                     try{
                                         console.log(`Enter the row[0-14] & column[0-14] number where you want to place ${tile} (example: 6, 10)`)
-                                        let pos = context.prompt()
+                                        let pos
+                                        if(test)
+                                            pos = testParams.letterPos[testParams.letterPosIter++]
+                                        else
+                                            pos = context.prompt()
                                         let posTile = JSON.parse('['+pos+']')
                                         run = false
                                         posTile.forEach(i=>{
@@ -132,13 +163,19 @@ class Game {
                         let numberOfTiles = 0
                         while(numberOfTiles<=0||numberOfTiles>7){
                             console.log("How many tiles would you like to replace? [1-7]")
-                            let numberOfTiles = Number(this.prompt())
+                            let numberOfTiles
+                            if(test)
+                                numberOfTiles = testParams.replaceNumberOfTiles[replaceIter++] 
+                            numberOfTiles = Number(this.prompt())
                             let indices = [], j
                             for(j=0; j<numberOfTiles; ){
                                 console.log(this.racks.players[i])
                                 console.log(`Enter the index of the tile ${j+1} from your rack [0-${this.racks.players[i].length-1}]`)
-                                let index = this.prompt()
-                                index = Number(index)
+                                let index
+                                if(test)
+                                    index = testParams.rTileIndices[rTileIndex]
+                                else
+                                    index = Number(this.prompt())
                                 if(index<0||index>this.racks.players[i].length-1){
                                     console.log("Index entered is out of range.")
                                     continue

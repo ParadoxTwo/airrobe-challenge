@@ -133,7 +133,6 @@ class Board{
                     let row = set[0]
                     if(row>last)
                         last = row
-                    console.log(`checking ${row}<${first}`)
                     if(row<first)
                         first = row
                 })

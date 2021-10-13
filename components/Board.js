@@ -107,15 +107,17 @@ class Board{
             let row = initRow, col = initCol
             let rowIterator, currentLetter, currentWord
             //check if it's connected to the main branch
+            let last = row, first = row
             if(!this.first){
                 let connected = this.alphabet.includes(tempBoard[row-1][col]) //starting from above 1st element
-                let last = col
                 posLetters.forEach(set=>{
                     if(connected) return
                     let row = set[0]
                     let col = set[1]
                     if(row>last)
                         last = row
+                    if(row<first)
+                        first = row
                     if(this.alphabet.includes(tempBoard[row][col-1])) //left
                         connected = true
                     if(this.alphabet.includes(tempBoard[row][col+1])) //right
@@ -125,6 +127,21 @@ class Board{
                     connected = true
                 if(!connected)
                     return [0, false, "Word not connected to the main branch!"]
+            }
+            else{
+                posLetters.forEach(set=>{
+                    let row = set[0]
+                    if(row>last)
+                        last = row
+                    console.log(`checking ${row}<${first}`)
+                    if(row<first)
+                        first = row
+                })
+            }
+            //check for columnwise continuity in word
+            for(rowIterator = first+1; rowIterator<last; rowIterator++){
+                if(!this.alphabet.includes(tempBoard[rowIterator][col]))
+                    return [0, false, "Broken word."]
             }
             //upward to letter (reverse)
             let upward = ""
@@ -186,19 +203,21 @@ class Board{
                 }
             })
         }
-        if(rowWise){
+        else if(rowWise){
             let row = initRow, col = initCol
             let colIterator, currentLetter, currentWord
             //check if it's connected to the main branch
+            let last = col, first = col
             if(!this.first){
                 let connected = this.alphabet.includes(tempBoard[row][col-1]) //starting from left of 1st element
-                let last = col
                 posLetters.forEach(set=>{
                     if(connected) return
                     let row = set[0]
                     let col = set[1]
                     if(col>last)
                         last = col
+                    if(col<first)
+                        first = col
                     if(this.alphabet.includes(tempBoard[row-1][col])) //above
                         connected = true
                     if(this.alphabet.includes(tempBoard[row+1][col])) //below
@@ -208,6 +227,21 @@ class Board{
                     connected = true
                 if(!connected)
                     return [0, false, "Word not connected to the main branch!"]
+            }
+            else{
+                posLetters.forEach(set=>{
+                    let col = set[1]
+                    if(col>last)
+                        last = col
+                    if(col<first)
+                        first = col
+                })
+            }
+            //check for row wise continuity in word
+            for(colIterator = first+1; colIterator<last; colIterator++){
+                console.log(tempBoard[row][colIterator])
+                if(!this.alphabet.includes(tempBoard[row][colIterator]))
+                    return [0, false, "Broken word."]
             }
             //leftward to letter (reverse)
             let leftward = ""

@@ -169,6 +169,8 @@ class Game {
                                 console.log(result[3])
                                 this.bag.replenish(this.racks,i)
                                 console.log("Your score is now: "+this.scores[i])
+                                console.log("Your rack has been replenished")
+                                console.log(this.racks.players[i])
                             }
                             else{
                                 positionTiles.forEach(posTile=>{
@@ -200,6 +202,10 @@ class Game {
                                     index = testParams.rTileIndices[testParams.rTileIndex++]
                                 else
                                     index = Number(this.prompt())
+                                if(indices.includes(index)){
+                                    console.log("You already selected this tile.")
+                                    continue
+                                }
                                 if(index<0||index>this.racks.players[i].length-1){
                                     console.log("Index entered is out of range.")
                                     continue
@@ -236,9 +242,11 @@ class Game {
         console.log("GAME OVER!!")
         if(this.scores[0]>this.scores[1]){
             console.log(`Player 1 wins with a score of ${this.scores[0]}!`)
+            console.log(`Player 2 scored ${this.scores[1]}`)
         }
         else if (this.scores[1]>this.scores[0]){
             console.log(`Player 2 wins with a score of ${this.scores[1]}!`)
+            console.log(`Player 1 scored ${this.scores[0]}`)
         }
         else {
             console.log(`You both tied with a score of ${this.scores[0]}!`)

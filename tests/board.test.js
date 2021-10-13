@@ -111,5 +111,11 @@ describe('Functional & Integration Tests for Board With Loaded Dictionary', ()=>
         let result = board.place(posLetters)
         expect(result[1]).toBe(false)
         expect(result[2]).toBe("Broken word.")
+        posLetters = [[7, 7, 'C'], [7, 8, 'A'], [7, 9, 'T']]
+        result = board.place(posLetters)
+        expect(result[1]).toBe(true)
+        posLetters = [[5, 9, 'P'], [6, 9, 'A'], [9, 9, 'T']]
+        result = board.place(posLetters)
+        expect(result[1]).toBe(false)
     })
 })

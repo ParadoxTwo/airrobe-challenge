@@ -135,8 +135,6 @@ class Board{
                     let col = set[1]
                     if(row>last)
                         last = row
-                    if(row<first)
-                        first = row
                     if(this.alphabet.includes(tempBoard[row][col-1])) //left
                         connected = true
                     if(this.alphabet.includes(tempBoard[row][col+1])) //right
@@ -147,16 +145,14 @@ class Board{
                 if(!connected)
                     return [0, false, "Word not connected to the main branch!"]
             }
-            else{
-                posLetters.forEach(set=>{
-                    let row = set[0]
-                    if(row>last)
-                        last = row
-                    if(row<first)
-                        first = row
-                })
-            }
             //check for columnwise continuity in word
+            posLetters.forEach(set=>{
+                let row = set[0]
+                if(row>last)
+                    last = row
+                if(row<first)
+                    first = row
+            })
             for(rowIterator = first+1; rowIterator<last; rowIterator++){
                 if(!this.alphabet.includes(tempBoard[rowIterator][col]))
                     return [0, false, "Broken word."]
@@ -234,8 +230,6 @@ class Board{
                     let col = set[1]
                     if(col>last)
                         last = col
-                    if(col<first)
-                        first = col
                     if(this.alphabet.includes(tempBoard[row-1][col])) //above
                         connected = true
                     if(this.alphabet.includes(tempBoard[row+1][col])) //below
@@ -246,16 +240,14 @@ class Board{
                 if(!connected)
                     return [0, false, "Word not connected to the main branch!"]
             }
-            else{
-                posLetters.forEach(set=>{
-                    let col = set[1]
-                    if(col>last)
-                        last = col
-                    if(col<first)
-                        first = col
-                })
-            }
             //check for row wise continuity in word
+            posLetters.forEach(set=>{
+                let col = set[1]
+                if(col>last)
+                    last = col
+                if(col<first)
+                    first = col
+            })
             for(colIterator = first+1; colIterator<last; colIterator++){
                 console.log(tempBoard[row][colIterator])
                 if(!this.alphabet.includes(tempBoard[row][colIterator]))

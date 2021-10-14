@@ -3,7 +3,7 @@ import "core-js/stable";
 import { async } from "regenerator-runtime";
 import "regenerator-runtime/runtime";
 import Game from "../components/Game.js";
-
+let timeout = 10000 //increase timeout if connection is slower
 describe('Integration Test Via Class Game', ()=>{
     let game
     it('Should Initialize The Game', ()=>{
@@ -22,7 +22,7 @@ describe('Integration Test Via Class Game', ()=>{
     it('Should Load The Game', async ()=>{
         await game.load()
         expect(game.loaded).toBe(true)
-    })
+    }, timeout)
 })
 
 describe('Integration and System Test for Game', ()=>{
@@ -30,7 +30,7 @@ describe('Integration and System Test for Game', ()=>{
     beforeAll(async ()=>{
         game = new Game()
         await game.load()
-    })
+    }, timeout)
     it('Should Have Loaded Dictionary', ()=>{
         expect(game.board.dictionary.length).toBeGreaterThan(0)
     })

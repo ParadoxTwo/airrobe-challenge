@@ -4,6 +4,8 @@ import "core-js/stable";
 import "regenerator-runtime/runtime";
 import { async } from "regenerator-runtime";
 
+let timeout = 10000 //increase timeout if connection is slower
+
 describe('Initialization Tests for Board',()=>{
     it('Should Initialize', () => {
         let board
@@ -20,7 +22,7 @@ describe('Functional & Integration Tests for Board With Loaded Dictionary', ()=>
     beforeAll(async()=>{
         board = new Board()
         await board.loadDictionary()
-    })
+    }, timeout)
     beforeEach(()=>{
         board.reset()
     })

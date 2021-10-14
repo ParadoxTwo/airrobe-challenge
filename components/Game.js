@@ -183,7 +183,6 @@ class Game {
                                     this.racks.players[i].push(posTile[2]) // putting the tile back into the player's rack
                                 })
                                 console.log(result[2])
-                                option = 0
                                 continue
                             }
                             this.board.show()

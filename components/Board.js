@@ -128,20 +128,32 @@ class Board{
             //check if it's connected to the main branch
             let last = row, first = row
             if(!this.first){
-                let connected = this.alphabet.includes(tempBoard[row-1][col]) //starting from above 1st element
+                let connected
+                if(!(row-1<0))
+                    connected = this.alphabet.includes(tempBoard[row-1][col]) //starting from above 1st element
                 posLetters.forEach(set=>{
                     if(connected) return
-                    let row = set[0]
-                    let col = set[1]
+                    let row = set[0] //7
+                    let col = set[1] //5
                     if(row>last)
                         last = row
-                    if(this.alphabet.includes(tempBoard[row][col-1])) //left
-                        connected = true
-                    if(this.alphabet.includes(tempBoard[row][col+1])) //right
-                        connected = true
+                    if(!(col-1<0))
+                        if(this.alphabet.includes(tempBoard[row][col-1])) //left
+                            connected = true
+                    if(!(col+1>14))
+                        if(this.alphabet.includes(tempBoard[row][col+1])) //right
+                            connected = true
+                    if(!(row-1<0))
+                        if(this.alphabet.includes(context.board[row-1][col])) //above in the original
+                            connected = true
+                    if(!(row+1>14))
+                        if(this.alphabet.includes(context.board[row+1][col])) //below in the original
+                            connected = true
                 })
-                if(this.alphabet.includes(tempBoard[last+1][col]))
-                    connected = true
+                if(!(last+1>14))
+                    if(this.alphabet.includes(tempBoard[last+1][col]))
+                        connected = true
+                
                 if(!connected)
                     return [0, false, "Word not connected to the main branch!"]
             }
@@ -160,23 +172,23 @@ class Board{
             //upward to letter (reverse)
             let upward = ""
             rowIterator = 1
-            currentLetter = tempBoard[row-rowIterator][col]
-            while(this.alphabet.includes(currentLetter)){
-                upward = currentLetter + upward
-                rowIterator++
+            currentLetter = tempBoard[row][col]
+            while(this.alphabet.includes(currentLetter)&&!(row - rowIterator<0)){
                 currentLetter = tempBoard[row-rowIterator][col]
+                if(this.alphabet.includes(currentLetter))
+                    upward = currentLetter + upward
+                ++rowIterator
             }
-
             //downward to letter
             let downward = ""
             rowIterator = 1
-            currentLetter = tempBoard[row+rowIterator][col]
-            while(this.alphabet.includes(currentLetter)){
-                downward = downward + currentLetter
-                rowIterator++
+            currentLetter = tempBoard[row][col]
+            while(this.alphabet.includes(currentLetter)&&!(row + rowIterator>14)){
                 currentLetter = tempBoard[row+rowIterator][col]
+                if(this.alphabet.includes(currentLetter))
+                    downward = downward + currentLetter
+                ++rowIterator
             }
-
             //combine up & down -> word
             currentWord = upward + tempBoard[row][col] + downward
             if(this.dictionary.includes(currentWord))
@@ -192,20 +204,22 @@ class Board{
                 //leftward to letter (reverse)
                 let leftward = ""
                 colIterator = 1
-                currentLetter = tempBoard[row][col-colIterator]
-                while(this.alphabet.includes(currentLetter)){
-                    leftward = currentLetter+leftward
-                    colIterator++
+                currentLetter = tempBoard[row][col]
+                while(this.alphabet.includes(currentLetter)&&!(col - colIterator<0)){
                     currentLetter = tempBoard[row][col-colIterator]
+                    if(this.alphabet.includes(currentLetter))
+                        leftward = currentLetter+leftward
+                    ++colIterator
                 }
                 //rightward to letter
                 let rightward = ""
                 colIterator = 1
-                currentLetter = tempBoard[row][col+colIterator]
-                while(this.alphabet.includes(currentLetter)){
-                    rightward = rightward + currentLetter
-                    colIterator++
+                currentLetter = tempBoard[row][col]
+                while(this.alphabet.includes(currentLetter)&&!(col + colIterator>14)){
                     currentLetter = tempBoard[row][col+colIterator]
+                    if(this.alphabet.includes(currentLetter))
+                        rightward = rightward + currentLetter
+                    ++colIterator
                 }
                 //combine left & right -> word
                 if(leftward+rightward!==""){ //nothing to consider if there are no letters either to left or to right
@@ -223,20 +237,31 @@ class Board{
             //check if it's connected to the main branch
             let last = col, first = col
             if(!this.first){
-                let connected = this.alphabet.includes(tempBoard[row][col-1]) //starting from left of 1st element
+                let connected
+                if(!(col-1<0))
+                    connected = this.alphabet.includes(tempBoard[row][col-1]) //starting from left of 1st element
                 posLetters.forEach(set=>{
                     if(connected) return
                     let row = set[0]
                     let col = set[1]
                     if(col>last)
                         last = col
-                    if(this.alphabet.includes(tempBoard[row-1][col])) //above
-                        connected = true
-                    if(this.alphabet.includes(tempBoard[row+1][col])) //below
-                        connected = true
+                    if(!(row-1<0))
+                        if(this.alphabet.includes(tempBoard[row-1][col])) //above
+                            connected = true
+                    if(!(row+1>14))
+                        if(this.alphabet.includes(tempBoard[row+1][col])) //below
+                            connected = true
+                    if(!(col-1<0))
+                        if(this.alphabet.includes(context.board[row][col-1])) //left in original
+                            connected = true
+                    if(!(col+1>14))
+                        if(this.alphabet.includes(context.board[row][col+1])) //right in original
+                            connected = true
                 })
-                if(this.alphabet.includes(tempBoard[row][last+1]))
-                    connected = true
+                if(!(last+1>14))
+                    if(this.alphabet.includes(tempBoard[row][last+1]))
+                        connected = true
                 if(!connected)
                     return [0, false, "Word not connected to the main branch!"]
             }
@@ -256,21 +281,23 @@ class Board{
             //leftward to letter (reverse)
             let leftward = ""
             colIterator = 1
-            currentLetter = tempBoard[row][col-colIterator]
-            while(this.alphabet.includes(currentLetter)){
-                leftward = currentLetter+leftward
-                colIterator++
+            currentLetter = tempBoard[row][col]
+            while(this.alphabet.includes(currentLetter)&&!(col - colIterator<0)){
                 currentLetter = tempBoard[row][col-colIterator]
+                if(this.alphabet.includes(currentLetter))
+                    leftward = currentLetter+leftward
+                ++colIterator
             }
 
             //rightward to letter
             let rightward = ""
             colIterator = 1
-            currentLetter = tempBoard[row][col+colIterator]
-            while(this.alphabet.includes(currentLetter)){
-                rightward = rightward + currentLetter
-                colIterator++
+            currentLetter = tempBoard[row][col]
+            while(this.alphabet.includes(currentLetter)&&!(col + colIterator>14)){
                 currentLetter = tempBoard[row][col+colIterator]
+                if(this.alphabet.includes(currentLetter))
+                    rightward = rightward + currentLetter
+                ++colIterator
             }
 
             //combine left & right -> word
@@ -287,20 +314,22 @@ class Board{
                 let rowIterator = 1
                 //upward to letter (reverse)
                 let upward = ""
-                currentLetter = tempBoard[row-rowIterator][col]
-                while(this.alphabet.includes(currentLetter)){
-                    upward = currentLetter + upward
-                    rowIterator++
+                currentLetter = tempBoard[row][col]
+                while(this.alphabet.includes(currentLetter)&&!(row - rowIterator<0)){
                     currentLetter = tempBoard[row-rowIterator][col]
+                    if(this.alphabet.includes(currentLetter))
+                        upward = currentLetter + upward
+                    ++rowIterator
                 }
                 //downward to letter
                 let downward = ""
                 rowIterator = 1
-                currentLetter = tempBoard[row+rowIterator][col]
-                while(this.alphabet.includes(currentLetter)){
-                    downward = downward + currentLetter
-                    rowIterator++
+                currentLetter = tempBoard[row][col]
+                while(this.alphabet.includes(currentLetter)&&!(row + rowIterator>14)){
                     currentLetter = tempBoard[row+rowIterator][col]
+                    if(this.alphabet.includes(currentLetter))
+                        downward = downward + currentLetter
+                    ++rowIterator
                 }
                 //combine up & down -> word
                 if(upward+downward!==""){ //nothing to consider if there are no letters either above or below

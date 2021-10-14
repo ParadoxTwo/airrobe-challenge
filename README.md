@@ -1,6 +1,6 @@
 # Scrabble 
 
-Building this game was quite challenging and fun! I learned a lot as I applied TDD in the game.
+Building this game was quite challenging and fun! I learned a lot as I applied TDD for the game.
 
 ## Prerequisites
 
@@ -32,5 +32,6 @@ Each player has a rack of 7 tiles each. First, Player 1 can either place tiles i
     <li>If option 2 (Replace Tiles From Bag) is chosen, the player has to tell which tiles he/she wants replaced and it will be done.</li>  
     <li>If option 3 (Pass) is chosen, the turn is passed to Player 2.  </li>
 </ul>  
-This gameplay continues until both players decide to Pass in which case the game ends and scores are shown with the victor. Screenshots are present in the project directory for general gameplay.
+This gameplay continues until both players decide to Pass in which case the game ends and scores are shown with the victor. Screenshots are present in the project directory for general gameplay. <br/>
+Also, I've used the dictionary given to me in the challenge document; the json version of it: https://github.com/dwyl/english-words
 
